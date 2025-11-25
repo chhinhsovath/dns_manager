@@ -96,7 +96,7 @@ git reset --hard origin/main
 echo -e "\033[0;32m✓ Code pulled\033[0m"
 
 echo -e "\033[1;34m📦 Installing dependencies...\033[0m"
-npm ci 2>&1 | tail -10
+npm install 2>&1 | tail -10
 echo -e "\033[0;32m✓ Dependencies installed\033[0m"
 
 echo -e "\033[1;34m🐳 Starting Docker services (NPM + PostgreSQL)...\033[0m"
@@ -116,8 +116,8 @@ else
 fi
 
 echo -e "\033[1;34m🗄️  Setting up database...\033[0m"
-npx prisma generate
-npx prisma db push --skip-generate
+./node_modules/.bin/prisma generate
+./node_modules/.bin/prisma db push --skip-generate
 echo -e "\033[0;32m✓ Database ready\033[0m"
 
 echo -e "\033[1;34m🔨 Building Next.js application...\033[0m"
