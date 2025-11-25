@@ -95,6 +95,32 @@ git fetch origin main
 git reset --hard origin/main
 echo -e "\033[0;32m✓ Code pulled\033[0m"
 
+echo -e "\033[1;34m📝 Creating .env file...\033[0m"
+cat > .env << 'ENV_EOF'
+# Database Configuration
+DATABASE_URL="postgresql://ped_dns_manager:admin_moeys@localhost:5433/ped_dns_manager?schema=public"
+
+# Cloudflare API Credentials
+CLOUDFLARE_API_TOKEN="Q-Xm43SUgAxSIDrCZrPA7xPAOkKfwD39YYodLIiZ"
+CLOUDFLARE_ZONE_ID="3b07695865141ef45be7adc352decc5a"
+CLOUDFLARE_EMAIL="Chhinhs@gmail.com"
+
+# Nginx Proxy Manager API
+NPM_API_URL="http://localhost:9081/api"
+NPM_EMAIL="chhinhhs@gmail.com"
+NPM_PASSWORD="changeme"
+
+# Application Settings
+NEXT_PUBLIC_APP_URL="http://192.168.155.122:6060"
+HOST_SERVER_IP="192.168.155.122"
+
+# Security
+JWT_SECRET="dns-manager-secret-key-prod-2025"
+NEXTAUTH_SECRET="nextauth-secret-key-prod-2025"
+NEXTAUTH_URL="http://192.168.155.122:6060"
+ENV_EOF
+echo -e "\033[0;32m✓ .env file created\033[0m"
+
 echo -e "\033[1;34m📦 Installing dependencies...\033[0m"
 npm install 2>&1 | tail -10
 echo -e "\033[0;32m✓ Dependencies installed\033[0m"
