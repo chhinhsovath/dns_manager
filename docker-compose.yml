@@ -7,9 +7,9 @@ services:
     container_name: dns_manager_npm
     restart: unless-stopped
     ports:
-      - '8080:80'     # HTTP (changed from 80 to avoid conflict)
-      - '8443:443'    # HTTPS (changed from 443 to avoid conflict)
-      - '8181:81'     # NPM Admin UI (changed from 81 to avoid conflict)
+      - '9080:80'     # HTTP (using 9080 to avoid conflicts)
+      - '9443:443'    # HTTPS (using 9443 to avoid conflicts)
+      - '9081:81'     # NPM Admin UI (using 9081 to avoid conflicts)
     environment:
       DB_SQLITE_FILE: "/data/database.sqlite"
     volumes:
