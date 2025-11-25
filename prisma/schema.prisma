@@ -1,0 +1,73 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Domain configuration
+model domains {
+  domain_id           Int      @id @default(autoincrement())
+  domain_name         String   @unique
+  cloudflare_zone_id  String
+  is_active           Boolean  @default(true)
+  created_at          DateTime @default(now())
+  updated_at          DateTime @updatedAt
+
+  subdomains          subdomains[]
+}
+
+// Subdomain to port mappings
+model subdomains {
+  subdomain_id            Int      @id @default(autoincrement())
+  domain_id               Int
+  subdomain_name          String   // e.g., "mel", "blog", "www"
+  full_domain             String   @unique // e.g., "mel.openplp.org"
+  target_host             String   @default("192.168.155.122")
+  target_port             Int
+  target_scheme           String   @default("http") // http or https
+
+  // Cloudflare DNS record
+  cloudflare_record_id    String?
+  cloudflare_record_type  String   @default("A") // A, CNAME, etc.
+  cloudflare_proxied      Boolean  @default(false)
+
+  // NPM Proxy Host
+  npm_proxy_host_id       Int?
+  npm_ssl_enabled         Boolean  @default(false)
+  npm_force_ssl           Boolean  @default(false)
+  npm_http2_support       Boolean  @default(true)
+  npm_block_exploits      Boolean  @default(true)
+
+  // Status and metadata
+  is_active               Boolean  @default(true)
+  description             String?
+  created_at              DateTime @default(now())
+  updated_at              DateTime @updatedAt
+
+  domain                  domains  @relation(fields: [domain_id], references: [domain_id], onDelete: Cascade)
+
+  @@index([domain_id])
+  @@index([full_domain])
+}
+
+// Activity logs for auditing
+model activity_logs {
+  log_id          Int      @id @default(autoincrement())
+  action_type     String   // CREATE, UPDATE, DELETE, SYNC
+  resource_type   String   // SUBDOMAIN, DNS_RECORD, PROXY_HOST
+  resource_id     String
+  details         String?  // JSON string with details
+  status          String   // SUCCESS, FAILED
+  error_message   String?
+  created_at      DateTime @default(now())
+
+  @@index([action_type])
+  @@index([resource_type])
+  @@index([created_at])
+}

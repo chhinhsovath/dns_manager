@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  # Nginx Proxy Manager - Reverse Proxy Engine
+  nginx-proxy-manager:
+    image: 'jc21/nginx-proxy-manager:latest'
+    container_name: dns_manager_npm
+    restart: unless-stopped
+    ports:
+      - '80:80'      # HTTP
+      - '443:443'    # HTTPS
+      - '81:81'      # NPM Admin UI (fallback)
+    environment:
+      DB_SQLITE_FILE: "/data/database.sqlite"
+    volumes:
+      - ./npm-data:/data
+      - ./npm-letsencrypt:/etc/letsencrypt
+    networks:
+      - dns_manager_network
+
+  # PostgreSQL Database for Custom Dashboard
+  postgres:
+    image: postgres:15-alpine
+    container_name: dns_manager_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dns_manager
+      POSTGRES_USER: dns_admin
+      POSTGRES_PASSWORD: change_this_password_in_production
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - dns_manager_network
+
+networks:
+  dns_manager_network:
+    driver: bridge
