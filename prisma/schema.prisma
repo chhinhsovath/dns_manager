@@ -17,7 +17,7 @@ model domains {
   cloudflare_zone_id  String
   is_active           Boolean  @default(true)
   created_at          DateTime @default(now())
-  updated_at          DateTime @updatedAt
+  updated_at          DateTime @default(now()) @updatedAt
 
   subdomains          subdomains[]
 }
@@ -48,7 +48,7 @@ model subdomains {
   is_active               Boolean  @default(true)
   description             String?
   created_at              DateTime @default(now())
-  updated_at              DateTime @updatedAt
+  updated_at              DateTime @default(now()) @updatedAt
 
   domain                  domains  @relation(fields: [domain_id], references: [domain_id], onDelete: Cascade)
 
